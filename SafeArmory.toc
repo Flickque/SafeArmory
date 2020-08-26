@@ -23,7 +23,5 @@ Locales\enUS.lua
 
 Core.lua
 Data.lua
-Security.lua
-Aeslua.lua
-Base64Enc.lua
+
 

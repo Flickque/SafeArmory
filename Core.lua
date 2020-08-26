@@ -22,9 +22,9 @@ Sa.ldb = LibStub("LibDataBroker-1.1"):NewDataObject(Sa.ADDON_NAME, {
 		end
 	end,
 	OnTooltipShow = function(tt)
-		tt:AddLine(Sa.L.minimapTitle , 1, 1, 1);
-		tt:AddLine(Sa.L.minimapNotice);
-		tt:AddLine(Sa.L.minimapClick)
+		tt:AddLine(Sa.L.title , 1, 1, 1);
+		tt:AddLine(Sa.L.notice);
+		tt:AddLine(Sa.L.click)
 	end	
 })
 Sa.icon = LibStub("LibDBIcon-1.0")
@@ -59,7 +59,7 @@ function Sa:Collect()
 	local comressedData = Sa:CompressData(Sa:ToJSON(data))
 
 	Sa:Copy(comressedData)
-	
+
 	SafeArmoryData = {
 		data = comressedData,
 		count = count
@@ -96,3 +96,7 @@ end
 
 Sa:RegisterChatCommand("safearmory", "SlashCommand")
 Sa:RegisterChatCommand("sa", "SlashCommand")
+
+print(L.title);
+print(L.welcome);
+print(L.notice);

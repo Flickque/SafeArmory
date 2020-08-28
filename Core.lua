@@ -12,7 +12,7 @@ local AceDB = LibStub("AceDB-3.0")
 
 Sa.ldb = LibStub("LibDataBroker-1.1"):NewDataObject(Sa.ADDON_NAME, {
 	type = "launcher",
-	text = "Safe Armory",
+	text = "SafeArmory",
 	icon = "Interface\\AddOns\\" .. Sa.ADDON_NAME .. "\\images\\icon",
 	OnClick = function(self, button, down)
 		if button == "LeftButton" then

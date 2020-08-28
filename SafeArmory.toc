@@ -23,5 +23,5 @@ Locales\enUS.lua
 
 Core.lua
 Data.lua
-
+Security.lua
 

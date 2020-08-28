@@ -55,31 +55,35 @@ function Sa:Collect()
 	Sa.dataCount = 0
 
 	local data = Sa:GetAllData()
-	local count = Sa:CountData()
+	local count = Sa:CountData(data)
+	local ts = GetServerTime()
+	local first = Sa:first(ts)
+	local last = Sa:last(ts)
 	local comressedData = Sa:CompressData(Sa:ToJSON(data))
+	local copy = string.format("%s:%s:%s:%s", first, comressedData, last, count)
 
-	Sa:Copy(comressedData)
+	Sa:Copy(copy)
 
 	SafeArmoryData = {
-		data = comressedData,
+		data = copy,
 		count = count
 	}	
 
 end
 
-function Sa:ToJSON(collection)
+function Sa:ToJSON(data)
 
-	local data = json.encode(collection)
+	data = json.encode(data)
 	return data
 
 end
 
-function Sa:CompressData(collection)
+function Sa:CompressData(data)
 
-	collection = LibDeflate:CompressDeflate(collection)
-	collection = LibDeflate:EncodeForPrint(collection)
+	data = LibDeflate:CompressDeflate(data)
+	data = LibDeflate:EncodeForPrint(data)
 
-	return collection
+	return data
 
 end
 function Sa:Copy(text)

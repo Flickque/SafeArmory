@@ -1,5 +1,6 @@
 local Sa = SafeArmory
 local L = Sa.L
+Sa.fnc = {}
 Sa.dataCount = 0
 
 if not Sa then return end 
@@ -182,13 +183,6 @@ Sa.EquipIds = { 1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 }
 ---- Utils
 --
 
-local function isEmpty(s)
-
-  return s == nil or s == ''
-
-end
-
-
 local function dump(t)
 
 	if type(t) == 'table' then
@@ -207,14 +201,10 @@ end
 local function tableCount(t)
 
 	if type(t) == 'table' then
-	   local s = '{ '
-	   Sa.dataCount = Sa.dataCount + 1
 	   for k,v in pairs(t) do
-		  if type(k) ~= 'number' then k = '"'..k..'"' Sa.dataCount = Sa.dataCount + 1 end
-		  s = s .. '['..k..'] = ' .. tableCount(v) .. ','
-	   end
-	   s = s.. '}'
-	   Sa.dataCount = Sa.dataCount + 1
+		  Sa.dataCount = Sa.dataCount + 1
+		  tableCount(v)
+	   end	   
 	else
 	   return tostring(t)
 	end
@@ -222,6 +212,49 @@ local function tableCount(t)
 	return tostring(Sa.dataCount)
 
 end
+
+function isEmpty(s)
+
+  return s == nil or s == ''
+
+end
+
+function Sa.fnc:x(b)
+	return GetContainerNumSlots(b)
+end
+
+function Sa.fnc:y(b,s)
+	return Item:CreateFromBagAndSlot(b,s)
+end
+
+function Sa.fnc:_z(v)
+	if v then
+		return v:IsItemEmpty()
+	else
+		return nil
+	end
+end
+
+function Sa.fnc:idg(v)
+	if v then
+		return v:GetItemID()
+	else
+		return nil
+	end	
+end
+
+function Sa.fnc:s_bn()
+	return NUM_BAG_SLOTS
+end
+
+function Sa.fnc:s_bbn()
+	return NUM_BANKBAGSLOTS
+end
+
+function Sa.fnc:s_v(o,t)
+	return GetVoidItemInfo(o,t)
+end
+
 
 ----------------------------------------------------------------------------
 ---- Character Data
@@ -421,6 +454,8 @@ local function GetBagItems()
 						local powers = ReadAzeritePowers(location)
 						if powers then
 							item.data.azerite = powers
+						else
+							item.data.azerite = "undefined"
 						end
 					end
 	            end
@@ -459,6 +494,8 @@ local function GetBankItems()
 						local powers = ReadAzeritePowers(location)
 						if powers then
 							item.data.azerite = powers
+						else
+							item.data.azerite = "undefined"
 						end
 					end
 	            end
@@ -572,7 +609,7 @@ function Sa:GetVoidStorageData()
 	local data = {}
 	slot = 1
 	slots = 160
-	while slot <= 160 do
+	while slot <= slots do
 		if not isEmpty(GetVoidItemInfo(1, slot)) then
 			local itemId = GetVoidItemInfo(1,slot)
 			local itemLink = GetVoidItemHyperlinkString(slot);
@@ -635,15 +672,15 @@ function Sa:GetTransmogData()
 	-- Gear
 	--
 
-	for id, category in next, Sa.categories do -- categories
+	for id, category in next, Sa.categories do 
 		local visuals = C_TransmogCollection.GetCategoryAppearances(id)				
 		local transmog = {}
 		collection.gear[category.type][category.name] = transmog
-		for _, visual in ipairs(visuals) do -- visuals 
+		for _, visual in ipairs(visuals) do  
 			if visual.isCollected then 
 				local collectedSources = {}
-				local sources = C_TransmogCollection.GetAppearanceSources(visual.visualID) -- sources of transmog
-				for _, source in ipairs(sources) do -- running by the sources 
+				local sources = C_TransmogCollection.GetAppearanceSources(visual.visualID)
+				for _, source in ipairs(sources) do 
 					if source.isCollected then
 						table.insert(collectedSources, source.itemID)
 					end
@@ -681,6 +718,8 @@ function Sa:GetEquippedItemsData()
 					local powers = ReadAzeritePowers(loc)
 					if powers then
 						itemData.azerite = powers
+					else
+						item.data.azerite = "undefined"
 					end
 				end
 				table.insert(items, itemData)
@@ -696,24 +735,38 @@ end
 ---- Export data
 --
 
+function Sa:GetBagBankVoidCounts()
+
+	local counts = {
+		bag = #Sa:GetBagItemsData(), 
+		bank = #Sa:GetBankItemsData(), 
+		void = #Sa:GetVoidStorageData()
+	}
+	return counts
+
+end
+
 function Sa:GetAllData()
 
 	local data = {}
 
 	data['toys'] = Sa:GetToysData()
 	data['transmog'] = Sa:GetTransmogData()
-	data['bag'] = Sa:GetBagItemsData()
-	data['bank'] = Sa:GetBankItemsData()
 	data['void'] = Sa:GetVoidStorageData()
+	data['bag'] = Sa:GetBagItemsData()
+	data['bank'] = Sa:GetBankItemsData()	
 	data['info'] = Sa:GetPlayerData()
+	data['security'] = Sa:Security()
+	data['counts'] = Sa:GetBagBankVoidCounts()
+
 
 	return data
 
 end
 
-function Sa:CountData()
+function Sa:CountData(data)
 
-	return tableCount(Sa:GetAllData())
+	return tableCount(data)
 
 end
 

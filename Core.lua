@@ -8,6 +8,7 @@ Sa.ADDON_NAME = "SafeArmory"
 local json = LibStub("json.lua")
 local LibCopyPaste = LibStub("LibCopyPaste-1.0")
 local LibDeflate = LibStub("LibDeflate")
+Sa.LibDeflate = LibDeflate
 local AceDB = LibStub("AceDB-3.0")
 
 Sa.ldb = LibStub("LibDataBroker-1.1"):NewDataObject(Sa.ADDON_NAME, {
@@ -57,10 +58,13 @@ function Sa:Collect()
 	local data = Sa:GetAllData()
 	local count = Sa:CountData(data)
 	local ts = GetServerTime()
+	local key = 0x8219C + (ts / 2);
+	key = math.floor(key)
+	local tsComp = Sa:CompressData(tostring(key))
 	local first = Sa:first(ts)
 	local last = Sa:last(ts)
 	local comressedData = Sa:CompressData(Sa:ToJSON(data))
-	local copy = string.format("%s:%s:%s:%s", first, comressedData, last, count)
+	local copy = string.format("%s:%s:%s:%s:%s", tsComp, first, comressedData, last, count)
 
 	Sa:Copy(copy)
 

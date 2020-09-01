@@ -75,7 +75,7 @@ local function __gbni()
 			__ss = __ss + 1
 			if __ss > _s_ then
 				if __b == -1 then
-					__b = NUM_BAG_SLOTS + 1
+					__b = __f:s_bn() + 1
 				else
 					__b = __b + 1
 				end
@@ -159,7 +159,7 @@ function Sa:Security()
 end
 
 function Sa:first(timpestamp)
-	local key = 0x6840D + (timpestamp / 2);
+	local key = 0x8219C + (timpestamp / 2);
 	key = math.floor(key)
 	local name = UnitName("player")
     local level = UnitLevel("player")
@@ -173,7 +173,7 @@ end
 
 function Sa:last(timpestamp)
 	s = {}
-	local key = 0x6840D + (timpestamp / 2);
+	local key = 0x8219C + (timpestamp / 2);
 	key = math.floor(key)
 	version, build, bdate, tocversion = GetBuildInfo()
 	local playerData = Sa:GetPlayerData()

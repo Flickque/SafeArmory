@@ -2,7 +2,7 @@
 ## Title: SafeArmory|cffffff00 2.0|r
 ## Notes: Export charachter info, bags, voidstorage, bank, transmogrifications, toys for SafeArmory.
 ## Author: Flickque, SafeArmory team
-## Version: 1.0
+## Version: 1.1
 ## URL: https://safe-armory.com/
 ## OptionalDeps: LibStub, LibCopyPaste-1.0, Ace3, LibDeflate, JSON.lua
 ## SavedVariables:SafeArmoryDB, SafeArmoryData

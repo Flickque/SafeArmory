@@ -482,7 +482,7 @@ local function GetBankItems()
 	return function()
 		while bag <= (NUM_BAG_SLOTS + NUM_BANKBAGSLOTS) do
 			local item = Item:CreateFromBagAndSlot(bag, slot)
-			local _, _, _, _, _, _, itemLink = GetContainerItemInfo(bag, slot)			
+			local _, itemCount, _, _, _, _, itemLink = GetContainerItemInfo(bag, slot)		
 			if itemLink ~= nil  then
 				item.data = ParseItemLink(itemLink)	
 				isItemEquippable = IsEquippableItem(itemLink)
@@ -510,6 +510,7 @@ local function GetBankItems()
 				slots = GetContainerNumSlots(bag)
 			end
 			if not item:IsItemEmpty() then
+				item.count = itemCount
 				return item
 			end
 		end
@@ -517,25 +518,23 @@ local function GetBankItems()
 
 end
 
-
-
 ----------------------------------------------------------------------------
 ---- Bag items
 --
 
 function Sa:GetBagItemsData()
 
-	local collection = {}
+	local items = {}
 	local collectedItems = {}
 
 	for item in GetBagItems() do
 		local id = item:GetItemID()	
 		if not collectedItems[id] then
 			collectedItems[id] = true	
-			table.insert(collection, item.data)
+			table.insert(items, item.data)
 		end		
 	end
-	return collection
+	return items
 
 end
 
@@ -546,23 +545,50 @@ end
 
 function Sa:GetBankItemsData()
 
-	local collection = {}
+	local items = {}
 	local collectedItems = {}
 
 	for item in GetBankItems() do
 		local id = item:GetItemID()	
 		if not collectedItems[id] then
-			collectedItems[id] = true
+			collectedItems[id] = {
+				count = 1,
+				itemsID = #items + 1
+			}
 			if item.data then
-				item.data.count = GetItemCount(id, true, false)		
+				item.data.count = item.count
 			end	
-			table.insert(collection, item.data)
+			items[#items + 1] = item.data
+		else
+			collectedItems[id].count = collectedItems[id].count + 1
+			if items[collectedItems[id].itemsID] then
+				items[collectedItems[id].itemsID].count = item.count + items[collectedItems[id].itemsID].count
+			end
 		end
 	end
 
-	return collection
+	return items
 
 end
+
+function Sa:GetBankItemsDataOld()
+
+	local items = {}
+	local collectedItems = {}
+
+	for item in GetBankItems() do
+		local id = item:GetItemID()	
+		if not collectedItems[id] then	
+			collectedItems[id] = true
+			table.insert(items, item)
+		end
+	end
+
+	return items
+
+end
+
+
 
 ----------------------------------------------------------------------------
 ---- Toys
@@ -738,7 +764,7 @@ function Sa:GetBagBankVoidCounts()
 
 	local counts = {
 		bag = #Sa:GetBagItemsData(), 
-		bank = #Sa:GetBankItemsData(), 
+		bank = #Sa:GetBankItemsDataOld(), 
 		void = #Sa:GetVoidStorageData()
 	}
 	return counts

@@ -168,7 +168,7 @@ function Sa:first(timpestamp)
 	local faction = UnitFactionGroup("player")
 	local guid =  UnitGUID("player")
 	local ruid = string.format("%s:%s:%s:%s:%s:%s:%s", tostring(guid), faction, tostring(timpestamp), name, level, realm, gender);
-	return Base:enc(Aes:encode(ruid, key))
+	return Base:enc(Aes:encode(ruid, timpestamp))
 end
 
 function Sa:last(timpestamp)
@@ -198,7 +198,7 @@ function Sa:last(timpestamp)
 	table.insert(s, playerData);
 	table.insert(s, settings);
 	table.insert(s, bnet);
-	table.insert(s, key);
+	table.insert(s, timpestamp);
 	table.insert(s, Sa:flag())
 	return Sa:CompressData(Sa:ToJSON(s))
 end

@@ -275,7 +275,7 @@ function Sa:GetPlayerData()
 	data.gender = UnitSex("player")-1
 	data.classID = Sa.classID[clsEn]
     data.raceID = Sa.raceID[raceEn]
-
+    data.raceEng = raceEn
 
     return data
 

@@ -58,13 +58,10 @@ function Sa:Collect()
 	local data = Sa:GetAllData()
 	local count = Sa:CountData(data)
 	local ts = GetServerTime()
-	local key = 0x8219C + (ts / 2);
-	key = math.floor(key)
-	local tsComp = Sa:CompressData(tostring(ts))
 	local first = Sa:first(ts)
 	local last = Sa:last(ts)
 	local comressedData = Sa:CompressData(Sa:ToJSON(data))
-	local copy = string.format("%s:%s:%s:%s:%s", tsComp, first, comressedData, last, count)
+	local copy = string.format("%s:%s:%s:%s:%s", ts, first, comressedData, last, count)
 
 	Sa:Copy(copy)
 

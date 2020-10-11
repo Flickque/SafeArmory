@@ -17,9 +17,9 @@ Sa.ldb = LibStub("LibDataBroker-1.1"):NewDataObject(Sa.ADDON_NAME, {
 	icon = "Interface\\AddOns\\" .. Sa.ADDON_NAME .. "\\images\\icon",
 	OnClick = function(self, button, down)
 		if button == "LeftButton" then
-			Sa:Collect()
+			Sa:Export()
 		elseif button == "RightButton" then	
-			Sa:Collect()				
+			Sa:Export()				
 		end
 	end,
 	OnTooltipShow = function(tt)
@@ -50,6 +50,10 @@ function Sa:OnInitialize()
 	Sa.icon:Register(Sa.ADDON_NAME, Sa.ldb, self.db.profile.minimap)
 end
 
+function Sa:Export()
+	seterrorhandler(print)   
+	Sa:Copy(Sa:Collect())	
+end
 
 function Sa:Collect()
 
@@ -63,12 +67,12 @@ function Sa:Collect()
 	local comressedData = Sa:CompressData(Sa:ToJSON(data))
 	local copy = string.format("%s:%s:%s:%s:%s", ts, first, comressedData, last, count)
 
-	Sa:Copy(copy)
-
 	SafeArmoryData = {
 		data = copy,
 		count = count
 	}	
+
+	return copy
 
 end
 

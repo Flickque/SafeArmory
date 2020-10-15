@@ -17,7 +17,7 @@ function CopyPasteFrame:Create()
 	local obj = {}
 	setmetatable(obj, CopyPasteFrame)
 	-- Main frame
-	local frame = CreateFrame("Frame", nil, UIParent)
+	local frame = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
 	frame:SetFrameStrata("DIALOG")
 	-- Backdrop
 	frame:SetBackdrop({

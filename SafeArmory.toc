@@ -1,4 +1,4 @@
-## Interface: 80300
+## Interface: 90100
 ## Title: SafeArmory|cffffff00 2.0|r
 ## Notes: Export charachter info, bags, voidstorage, bank, transmogrifications, toys for SafeArmory.
 ## Author: Flickque, SafeArmory team
